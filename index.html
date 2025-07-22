@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A2 English Exam Flashcards</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #333;
+    }
+    .flashcard {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .flashcard:hover {
+      background: #f9f9f9;
+    }
+    .step {
+      display: none;
+      margin-top: 15px;
+      padding: 10px;
+      border-left: 4px solid #007bff;
+      background: #e9f2ff;
+    }
+    .step.visible {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .progress-bar {
+      height: 10px;
+      width: 100%;
+      background: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .progress {
+      height: 100%;
+      background: #28a745;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 A2 English Exam Practice – Speaking Flashcards</h1>
+  <div class="progress-bar">
+    <div id="progress" class="progress"></div>
+  </div>
+  <div id="flashcards-container"></div>
+
+  <script>
+    let progress = 0;
+    const flashcards = [
+      { q: "What do you do?", a: "I work as a receptionist.", e: "Use simple present to talk about jobs.", ex: "I work as a teacher. She works as a nurse." },
+      { q: "How do you ask for the bill in a restaurant?", a: "Can I have the bill, please?", e: "Use polite form 'Can I have...'", ex: "Can I have a glass of water, please?" },
+      { q: "What do you say when you're late for a meeting?", a: "Sorry, I’m running late.", e: "'Running late' is common to express delay.", ex: "Sorry, I’m stuck in traffic." },
+      { q: "How to say you want to look without help in a shop?", a: "I’m just looking, thanks.", e: "Polite phrase to avoid assistance.", ex: "Just browsing, thank you." },
+      { q: "What do you say when you want to stop working for a moment?", a: "Let’s take a break.", e: "Common in work context.", ex: "Let’s get some coffee." },
+      { q: "How do you ask for help politely?", a: "Can you help me, please?", e: "Use polite question form.", ex: "Excuse me, can you help me find this?" },
+      { q: "How do you say you didn’t understand something?", a: "I don’t understand.", e: "Simple way to ask for repetition.", ex: "Can you repeat that, please?" },
+      { q: "What do you say to ask someone to speak slower?", a: "Speak slowly, please.", e: "Helps in conversation if you miss information.", ex: "Can you speak more slowly, please?" },
+      { q: "How do you introduce where you're from?", a: "I’m from Brazil.", e: "Used in self-introductions.", ex: "I’m from Italy. Where are you from?" },
+      { q: "What do you say when traveling for work?", a: "I’m here on business.", e: "Used to clarify purpose of travel.", ex: "I’m not on vacation. I’m here on business." },
+      { q: "How do you say you need to send a message?", a: "I need to send an email.", e: "Use 'need to' for necessity.", ex: "I need to call my manager." },
+      { q: "How do you talk about a meeting time?", a: "I have a meeting at 10.", e: "Use present simple for schedules.", ex: "I have a dentist appointment at 3." },
+      { q: "How do you talk about being on pause at work?", a: "I’m on a break.", e: "Common in work environments.", ex: "I’ll call you after my break." },
+      { q: "How do you ask about someone’s job?", a: "What do you do?", e: "Common question in introductions.", ex: "I’m a software developer." },
+      { q: "How do you ask for directions to a cash machine?", a: "Where is the nearest ATM?", e: "ATM = Automated Teller Machine.", ex: "Where is the nearest bank?" },
+      { q: "What do you say when checking into a hotel?", a: "I have a reservation.", e: "Say this at reception.", ex: "I have a reservation under Smith." },
+      { q: "How do you request a room at a hotel?", a: "I’d like a single room.", e: "Polite request with 'I’d like...'", ex: "I’d like a double room, please." },
+      { q: "How do you say you are registering for a flight?", a: "I need to check in.", e: "Used at airports.", ex: "Where is the check-in desk?" },
+      { q: "How do you mention your flight access document?", a: "Here’s my boarding pass.", e: "Boarding pass is required to board.", ex: "Do I need to show my boarding pass now?" },
+      { q: "How do you say how you’re feeling?", a: "I’m doing fine, thank you.", e: "Standard response to 'How are you?'", ex: "I’m okay. And you?" }
+    ];
+
+    const container = document.getElementById('flashcards-container');
+    flashcards.forEach((card, index) => {
+      const el = document.createElement('div');
+      el.className = 'flashcard';
+      el.innerHTML = `<strong>${index + 1}. Question:</strong> ${card.q}
+        <div class=\"step\">✅ <strong>Model Answer:</strong> ${card.a}</div>
+        <div class=\"step\">📘 <strong>Explanation:</strong> ${card.e}</div>
+        <div class=\"step\">🔍 <strong>Example:</strong> ${card.ex}</div>`;
+      el.onclick = function () {
+        const steps = this.querySelectorAll('.step');
+        for (let i = 0; i < steps.length; i++) {
+          if (!steps[i].classList.contains('visible')) {
+            steps[i].classList.add('visible');
+            progress += 100 / (flashcards.length * 3);
+            document.getElementById('progress').style.width = Math.min(progress, 100) + '%';
+            break;
+          }
+        }
+      };
+      container.appendChild(el);
+    });
+  </script>
+</body>
+</html>
